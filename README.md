@@ -73,7 +73,8 @@ GET bank/account/_search?size=50
 		{"took":1,"timed_out":false,"_shards":{"total":5,"successful":5,"skipped":0,"failed":0},"hits":{"total":1,"max_score":4.882802,"hits":[{"_index":"bank","_type":"account","_id":"25","_score":4.882802,"_source":{"account_number":25,"balance":40540,"firstname":"Virginia","lastname":"Ayala","age":39,"gender":"F","address":"171 Putnam Avenue","employer":"Filodyne","email":"virginiaayala@filodyne.com","city":"Nicholson","state":"PA"}}]}}
 
 	```	 
-2) Using a request body:  The search request can be executed with a search DSL, which includes the Query DSL, within its body
+2) Using a request body:  The search request can be executed with a search DSL, 
+which includes the Query DSL, within its body
 	```
 	GET bank/account/_search/
 		{
@@ -88,8 +89,8 @@ GET bank/account/_search?size=50
 		}'
 	```
 
-### /_put APIs:
-##### PUT API to create indices:
+### Action *PUT* && /_update APIs:
+##### PUT to create indices:
 1 - Default number of shards will change from **[5]** in v6.5.4 to **[1]** in v7.0.0:
 
 2 - Elasticsearch by default created **[1]** replica for this index
@@ -110,9 +111,10 @@ health   status index    uuid                   pri rep docs.count docs.deleted 
 *yellow* open   customer 95SQ4TSUT7mWBT7VNHH67A   1   1          0            0    
 ```
 
-##### PUT API to [Replace] documents:
+##### PUT to [Create|Replace] documents:
 1 - if Document doesn't exist then PUT can be used as creating document
-2 - PUT update whole documents instead of partial update. For example, 2nd PUT will not only update the name but also erase the contact in documents. e.g. as *Replacing* original document
+
+2 - PUT update whole documents instead of partial update. For example, 2nd PUT will not only update the name but also erase the content in documents. e.g. as *Replacing* original document
 
 ```
 PUT /customer/_doc/1?pretty
@@ -165,6 +167,64 @@ GET /customer/_doc/1
   }
 }
 ```
+
+##### Update API to update document:
+unlike **PUT** action, **/_update** only changing document with the name field
+below _update preserves 'age' field
+
+There are 2 ways to update the document:
+
+1 - 'doc'
+```
+POST /customer/_doc/1?pretty
+{
+  "name": "Air flow",
+  "age": 29
+}
+GET /customer/_doc/1
+{
+  "_index" : "customer",
+  "_type" : "_doc",
+  "_id" : "1",
+  "_version" : 75,
+  "found" : true,
+  "_source" : {
+    "name" : "Air flow",
+    "age": 29
+  }
+}
+
+POST /customer/_doc/1/_update?pretty
+{
+  "doc": { "name": "Jane Doe" }
+}
+GET /customer/_doc/1
+{
+  "_index" : "customer",
+  "_type" : "_doc",
+  "_id" : "1",
+  "_version" : 76,
+  "found" : true,
+  "_source" : {
+    "name" : "Jane Doe",
+    "age" : 29
+  }
+}
+```
+2 - 'script'
+```
+POST /customer/_doc/1/_update?pretty
+{
+  "script" : "ctx._source.age += 5"
+}
+
+POST /customer/_doc/1/_update?pretty
+{
+  "script" : "ctx._source.name = 'Avatar'"
+}
+```
+
+
 
 ### Prerequisites
 
