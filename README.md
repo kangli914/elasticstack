@@ -78,7 +78,7 @@ response:
 Sort after search:
 ```
 GET /bank/_doc/_search?sort=account_number:asc
- curl -XGET "http://localhost:9200/bank/_doc/_search?sort=account_number:asc"
+curl -XGET "http://localhost:9200/bank/_doc/_search?sort=account_number:asc"
 ```
 	
 	
@@ -181,11 +181,9 @@ GET /customer/_doc/1
 unlike **PUT** action, **/_update** only changing document with the name field
 below _update preserves 'age' field
 
-the update action payload, supports the following options: **doc (partial document)**, upsert, doc_as_upsert, **script**, params (for script), lang (for script) and _source.
+There are 2 ways to update the document:
 
-There are 2 ways to update the document: **doc** and **script**
-
-1 - ** 'doc' **
+1 - 'doc'
 ```
 POST /customer/_doc/1?pretty
 {
@@ -205,7 +203,6 @@ GET /customer/_doc/1
   }
 }
 
-Note: '_doc' below is document type and "doc" is options for **/_update** to partial document
 POST /customer/_doc/1/_update?pretty
 {
   "doc": { "name": "Jane Doe" }
@@ -223,7 +220,7 @@ GET /customer/_doc/1
   }
 }
 ```
-2 - ** 'script' **
+2 - 'script'
 ```
 POST /customer/_doc/1/_update?pretty
 {
