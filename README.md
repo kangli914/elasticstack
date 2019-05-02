@@ -72,31 +72,43 @@ $ curl -XGET "http://localhost:9200/bank/account/_search?q=firstname:Virginia"
 response:
 ```
 {"took":1,"timed_out":false,"_shards":{"total":5,"successful":5,"skipped":0,"failed":0},"hits":{"total":1,"max_score":4.882802,"hits":[{"_index":"bank","_type":"account","_id":"25","_score":4.882802,"_source":{"account_number":25,"balance":40540,"firstname":"Virginia","lastname":"Ayala","age":39,"gender":"F","address":"171 Putnam Avenue","employer":"Filodyne","email":"virginiaayala@filodyne.com","city":"Nicholson","state":"PA"}}]}}
-```
-
 ```	 
-Sort after search:
+Sorting example after search:
 ```
 GET /bank/_doc/_search?sort=account_number:asc
 curl -XGET "http://localhost:9200/bank/_doc/_search?sort=account_number:asc"
 ```
 	
-	
 2 - Using a request body - sending search parameters **through the REST request body**:  The search request can be executed with a search DSL, 
 which includes the Query DSL, within its body
-	```
-	GET bank/account/_search/
-		{
-		  "query": { "match": {"firstname": "Virginia"}}
-		}
-	```
-	Equivalent curl
-	```	
-		$ curl -XGET "http://localhost:9200/bank/account/_search/" -H 'Content-Type: application/json' -d'
-		{
-		   "query": { "match": {"firstname": "Virginia"}}
-		}'
-	```
+```
+GET bank/account/_search/
+{
+  "query": { "match": {"firstname": "Virginia"}}
+}	
+
+$ curl -XGET "http://localhost:9200/bank/account/_search/" -H 'Content-Type: application/json' -d'
+{
+   "query": { "match": {"firstname": "Virginia"}}
+}'
+```
+Sorting example:
+```
+GET /bank/_search
+{
+  "query": { "match_all": {} },
+  "sort": [	{ "account_number": "asc" } ],
+  "size": 100
+}
+
+$ curl -XGET "http://localhost:9200/bank/_search" -H 'Content-Type: application/json' -d'
+{
+  "query": { "match_all": {} },
+  "sort": [ { "account_number": "asc"} ],
+  "size": 100
+}'
+```
+
 
 ### Action *PUT* && /_update APIs:
 ##### PUT to create indices:
