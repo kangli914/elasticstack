@@ -63,17 +63,26 @@ yellow open   dummylogstash-2019.03.12 Ix9ZKIf4SxOFx5QZv64iJw   5   1       4631
 http://localhost:9200/bank/account/_search?size=50
 GET bank/account/_search?size=50
 ```
-1) Simple query string as a parameter
-	```	 
-	GET bank/account/_search?q=firstname:Virginia
-	```
-	Equivalent curl
-	```	
-	$ curl -XGET "http://localhost:9200/bank/account/_search?q=firstname:Virginia"
-		{"took":1,"timed_out":false,"_shards":{"total":5,"successful":5,"skipped":0,"failed":0},"hits":{"total":1,"max_score":4.882802,"hits":[{"_index":"bank","_type":"account","_id":"25","_score":4.882802,"_source":{"account_number":25,"balance":40540,"firstname":"Virginia","lastname":"Ayala","age":39,"gender":"F","address":"171 Putnam Avenue","employer":"Filodyne","email":"virginiaayala@filodyne.com","city":"Nicholson","state":"PA"}}]}}
+1 - Simple query string as a parameter - sending search parameters **through the REST request URI** 
+	
+```	 
+GET bank/account/_search?q=firstname:Virginia
+$ curl -XGET "http://localhost:9200/bank/account/_search?q=firstname:Virginia"
+```
+response:
+```
+{"took":1,"timed_out":false,"_shards":{"total":5,"successful":5,"skipped":0,"failed":0},"hits":{"total":1,"max_score":4.882802,"hits":[{"_index":"bank","_type":"account","_id":"25","_score":4.882802,"_source":{"account_number":25,"balance":40540,"firstname":"Virginia","lastname":"Ayala","age":39,"gender":"F","address":"171 Putnam Avenue","employer":"Filodyne","email":"virginiaayala@filodyne.com","city":"Nicholson","state":"PA"}}]}}
+```
 
-	```	 
-2) Using a request body:  The search request can be executed with a search DSL, 
+```	 
+Sort after search:
+```
+GET /bank/_doc/_search?sort=account_number:asc
+ curl -XGET "http://localhost:9200/bank/_doc/_search?sort=account_number:asc"
+```
+	
+	
+2 - Using a request body - sending search parameters **through the REST request body**:  The search request can be executed with a search DSL, 
 which includes the Query DSL, within its body
 	```
 	GET bank/account/_search/
