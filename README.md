@@ -58,7 +58,8 @@ yellow open   dummylogstash-2019.03.12 Ix9ZKIf4SxOFx5QZv64iJw   5   1       4631
 ``` 
 
 ### /_search APIs: 
-##### Search API (or GET API in Document API) by size
+##### Search API (or GET API in Document API) 
+
 ```
 http://localhost:9200/bank/account/_search?size=50
 GET bank/account/_search?size=50
@@ -115,6 +116,9 @@ $ curl -XGET "http://localhost:9200/bank/_search" -H 'Content-Type: application/
 More DSL search example: find the 10th-19th indexed documents:
 by default, search only returned 10 documents. e.g. *size* is not specified, it defaults to 10.
 The *from* parameter (0-based) specifies which document index to start from
+
+set **size=0** to NOT show search hits
+
 ```
 GET /bank/_doc/_search
 {
