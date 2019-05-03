@@ -81,6 +81,10 @@ curl -XGET "http://localhost:9200/bank/_doc/_search?sort=account_number:asc"
 	
 2 - Using a request body - sending search parameters **through the REST request body**:  The search request can be executed with a search DSL, 
 which includes the Query DSL, within its body
+
+Difference between **'match'** and **'match_all'** (??)
+* *match_all* : query is used to match all documents
+* *match* : a basic fielded search query:  a search done against a specific field or set of fields
 ```
 GET bank/account/_search/
 {
@@ -97,7 +101,7 @@ Sorting example:
 GET /bank/_search
 {
   "query": { "match_all": {} },
-  "sort": [	{ "account_number": "asc" } ],
+  "sort": [	{ "account_number": "desc" } ],
   "size": 100
 }
 
@@ -108,7 +112,43 @@ $ curl -XGET "http://localhost:9200/bank/_search" -H 'Content-Type: application/
   "size": 100
 }'
 ```
+More DSL search example: find the 10th-19th indexed documents:
+by default, search only returned 10 documents. e.g. *size* is not specified, it defaults to 10.
+The *from* parameter (0-based) specifies which document index to start from
+```
+GET /bank/_doc/_search
+{
+  "query": { "match_all": {} },
+  "sort": [ { "account_number": "asc" } ],
+  "from": 10,
+  "size": 10
+}
+```
+Bellow example composes two match queries and returns all accounts containing "mill" **or** "lane" in the address:
 
+1 - match (matching *mill* **or** *lane*) vs. match_phrase (matching exact phrase *mill lane*)
+```
+GET /bank/_search
+{
+  "query": { "match": { "address": "mill lane" } }
+}
+```
+2 - use **bool** query: llows us to compose smaller queries into bigger queries using boolean logic.
+ 
+bool params: *must, should, filter, must_not*
+```
+GET /bank/_search
+{
+  "query": {
+    "bool": {
+      "should": [
+        { "match": { "address": "mill" } },
+        { "match": { "address": "lane" } }
+      ]
+    }
+  }
+}
+```
 
 ### Action *PUT* && /_update APIs:
 ##### PUT to create indices:
