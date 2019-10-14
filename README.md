@@ -1,4 +1,4 @@
-# Elastic Stack Notes
+# Elastic Stack Notes 
 
 Notes taken from learning Elasticsearch Stack
 
